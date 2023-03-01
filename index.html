@@ -1,1 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>iPhone Light Control</title>
+</head>
+<body>
+	<h1>iPhone Light Control</h1>
+	<p>Click the button below to activate your iPhone light by saying "Lumos".</p>
+	<button onclick="activateLight()">Activate Light</button>
 
+	<script>
+		// This function activates the iPhone light if "Lumos" is detected by the microphone.
+		function activateLight() {
+			// Request permission to access the microphone.
+			navigator.mediaDevices.getUserMedia({audio: true})
+				.then(function(stream) {
+					// Create a new speech recognition object.
+					var recognition = new webkitSpeechRecognition();
+					recognition.lang = 'en-US';
+					recognition.start();
+
+					// Event listener for when a result is returned by the speech recognition object.
+					recognition.onresult = function(event) {
+						var transcript = event.results[0][0].transcript;
+						if (transcript.toLowerCase() === "lumos") {
+							// Activate the iPhone light.
+							navigator.vibrate(1000); // Vibrate the phone to indicate success.
+							navigator.vibrate(0); // Stop the vibration.
+							navigator.vibrate(1000); // Vibrate the phone again to indicate success.
+							document.body.style.backgroundColor = "white"; // Change the background color to white to mimic the light turning on.
+						}
+					};
+				})
+				.catch(function(error) {
+					console.log(error);
+				});
+		}
+	</script>
+</body>
+</html>
